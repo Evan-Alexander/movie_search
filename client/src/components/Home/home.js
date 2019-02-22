@@ -1,7 +1,10 @@
 import React, { Component } from 'react'
-import axios from 'axios';
 import SearchCategories from './search_categories';
 import LeftRightSearch from './left_right_search';
+import SearchBox from './searchbox';
+
+import { connect } from 'react-redux';
+import { getMoviesByOption, getMoviesBySearchTerm } from '../../redux_store/actions/movie_actions';
 
 class Home extends Component {
   state = {
@@ -14,11 +17,11 @@ class Home extends Component {
 
   loadMovies = () => {
     const { page, searchType } = this.state;
-    const url = `https://api.themoviedb.org/3/movie/${searchType}?api_key=${process.env.REACT_APP_MOVIE_KEY}&language=en-US&page=${page}`
-    axios.get(url)
-    .then(res => {
+    this.props.dispatch(getMoviesByOption(searchType, page))
+    .then(() => {
+      console.log(this.props.movies.movies)
       let newMovies = [];
-      res.data.results.map(item => {
+      this.props.movies.movies.results.map(item => {
         newMovies.push(item)
         return newMovies
       })
@@ -63,16 +66,45 @@ class Home extends Component {
     });
   }
 
+  onSearchChange = e => {
+    let searchWord = e.target.value;
+    this.props.dispatch(getMoviesBySearchTerm(searchWord))
+      .then(() => {
+        let newMovies = [];
+        if(this.props.movies.movies.results.length > 0) {
+          this.props.movies.movies.results.map(item => {
+            newMovies.push(item)
+            return newMovies
+          })
+          this.setState({
+            movies: newMovies
+          })
+        }
+      })
+  }
+
   render() {
     const posterPath = 'https://image.tmdb.org/t/p/w300';
     return (
       <div className="container">
+        <div className="row">
+        <div className="col-md-9 d-flex justify-content-right align-items-center"><h1>Movie Database </h1> </div>
+        <div className="col-md-3 d-flex justify-content-center align-items-center">
+            <SearchBox searchChange={this.onSearchChange} />
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="mx-3"><circle cx="10.5" cy="10.5" r="7.5"></circle><line x1="21" y1="21" x2="15.8" y2="15.8"></line></svg>     
+          </div>
         <SearchCategories changeSearch={this.changeSearch} searches={this.state.searches}/> 
+        </div>
+
         <div className="row">
         {this.state.movies ? 
             this.state.movies.map((movie, i) => (
               <div className="col-md-3 col-sm-6" key={i}>
-                <img src={posterPath + movie.poster_path} alt="thing"/>
+              {
+                movie.poster_path ? 
+                  <img src={posterPath + movie.poster_path} alt="thing"/>
+                :null
+              } 
               </div>
             ))
           :null}
@@ -82,4 +114,11 @@ class Home extends Component {
     );
   }
 }
-export default Home
+
+const mapStateToProps = state => {
+  return {
+    movies: state.movies
+  }
+}
+
+export default connect(mapStateToProps)(Home)
