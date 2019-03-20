@@ -26,9 +26,11 @@ class Modal extends Component {
     if(videos.length) {
       videos.map((video, i) => {
         if(video.type === "Trailer" && video.site === "YouTube") {
-          var n = video.name.indexOf("Official");
-          if (n !== -1) {
+          let official = video.name.indexOf("Official");
+          let trailer = video.name.indexOf("Trailer")
+          if (official !== -1 || trailer !== -1) {
             videoKeys.push(video.key)
+            console.log(videoKeys)
           }     
         }
         return videoKeys;
@@ -43,11 +45,11 @@ class Modal extends Component {
       height: '390',
       width: '640',
       playerVars: { // https://developers.google.com/youtube/player_parameters
-        autoplay: 0
+        autoplay: 1
       }
     };
     return (
-      <div className="col-md-3 reset-padding play-trailer">
+      <div className="col-md-3 reset-padding play-trailer movie-info">
           <h5>Play Trailer</h5>
           <button className="play-trailer-btn" onClick={this.handleOpenModal}><i className="fab fa-youtube"></i></button> 
           <ReactModal 

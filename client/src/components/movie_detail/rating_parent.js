@@ -29,7 +29,7 @@ class RatingParent extends Component {
           progress={ this.state.progress }
         />
         <div className="rating-icon"><i className="far fa-star"></i></div>
-        <div className="rating-text"><a href="#">User Rating</a></div>
+        <div className="rating-text"><p>User Rating</p></div>
         <div id="rating-score">{movie.vote_average}</div>
       </div>
 

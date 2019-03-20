@@ -3,11 +3,11 @@ import LeftRightSearch from './left_right_search';
 import SearchBox from './searchbox';
 import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
-import { getMoviesByOption, getMoviesBySearchTerm, getNextPage } from '../../redux_store/actions/movie_actions';
+import { getMoviesByOption, getMoviesBySearchTerm, clearMovie } from '../../redux_store/actions/movie_actions';
 import { searchOptions } from '../../utils/fixed_categories';
 import SearchCategories from './search_categories';
 
-class Home2 extends Component {
+class Home extends Component {
   constructor(props) {
     super(props)
     this.state = {
@@ -29,7 +29,6 @@ class Home2 extends Component {
   }
 
   loadMovies(currentSearch, currentPage) {
-    sessionStorage.setItem('currentSearch', currentSearch);
     this.props.dispatch(getMoviesByOption(currentSearch, currentPage))
     .then((response) => {
       if(response.payload) {
@@ -49,11 +48,11 @@ class Home2 extends Component {
   } 
 
   renderMovies = () => (
-    this.state.movies ? 
+    this.state.movies.length ? 
     this.state.movies.map((movie, i) => (
 
       movie.id && movie.poster_path ? 
-        <div className="col-md-3 col-sm-6 movie-posters" key={i} currentsearch={this.state.currentSearch}>
+        <div className="col-md-3 col-sm-6 movie-posters" key={i}>
           <Link to={`/movie/${movie.id}`}>
             <img src={'https://image.tmdb.org/t/p/w300' + movie.poster_path} alt="thing"/>
           </Link>
@@ -99,6 +98,8 @@ class Home2 extends Component {
   }
 
   render() {
+    console.log("rendered state", this.state)
+
     return (
       <div>
         <div className="row">
@@ -126,4 +127,4 @@ const mapStateToProps = state => {
   }
 }
 
-export default connect(mapStateToProps)(Home2)
+export default connect(mapStateToProps)(Home)

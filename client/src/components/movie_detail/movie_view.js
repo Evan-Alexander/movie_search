@@ -1,16 +1,48 @@
 import React from 'react'
 import { handleDate, handleRevenue } from '../../utils/misc'
-import Modal from './modal';
+import TrailerModal from './modal';
 import RatingParent from './rating_parent';
 
-const MovieView = ({ movie }) => {
+const MovieView = (props) => {
+  const { movie } = props;
+  console.log(movie.revenue)
   const posterBase = 'https://image.tmdb.org/t/p/w300';
-  // const backdropBase = 'https://image.tmdb.org/t/p/w500';
 
+    let cast = [];
+    let director = [];
+
+    if(movie.credits.cast) {
+      movie.credits.cast.map((actor, i) => {
+        if(actor.order <= 4) {
+          cast.push({
+            name: actor.name,
+            profile_path: actor.profile_path
+          })
+        }
+        return cast;
+      })
+    }
+
+    director.push({
+      name: movie.credits.crew[0].name,
+      profile_path: movie.credits.crew[0].profile_path
+    })
+
+    const showRevenue = () => (
+      movie.revenue === 0 ? (
+        <p>Unavailable</p>
+      ) : (
+        <p>${handleRevenue(movie.revenue)}</p>
+      )
+    )
+
+
+  // const backdropBase = 'https://image.tmdb.org/t/p/w500';
   return (
     <div>
+
       <div className="row">
-            <h1>{movie.title}<span className="release-date">{`(${handleDate(movie.release_date)})`}</span></h1>
+        <h1>{movie.title}<span className="release-date">{`(${handleDate(movie.release_date)})`}</span></h1>
       </div>
       <div className="row">
         <div className="col-md-4">
@@ -23,30 +55,30 @@ const MovieView = ({ movie }) => {
         <div className="col-md-8">
           <h4>Overview</h4>
           <p>{movie.overview}</p>
-          <div className="row">
+          <div className="row padding-b">
             <RatingParent movie={movie} />
-            <div className="col-md-3 reset-padding">
+            <div className="col-md-3 reset-padding movie-info">
               <h5>Runtime </h5>
               <p>{movie.runtime} min</p>
             </div>
-            <div className="col-md-3 reset-padding">
+            <div className="col-md-3 reset-padding movie-info">
               <h5>Total Revenue</h5>
-              <p>${handleRevenue(movie.revenue)}</p>
+              {showRevenue()}
             </div>
-            <Modal />
+            <TrailerModal />
      
           </div>
           <h5>Director</h5>
-          <div className="row">
+          <div className="row padding-b">
             <div className="col-md-2 profile-outter">
-              <img className="profile-pic" src={posterBase + movie.director[0].profile_path} alt=""/>
-              <p>{movie.director[0].name}</p>
+              <img className="profile-pic" src={posterBase + director[0].profile_path} alt=""/>
+              <p>{director[0].name}</p>
             </div>
           </div>
           <h5>Starring</h5>
           <div className="row">
-            {movie.cast ? 
-              movie.cast.map((actor, i) => (      
+            {cast ? 
+              cast.map((actor, i) => (      
                 <div className="col-md-2 profile-outter"  key={i}>
 
                   <img className="profile-pic" src={posterBase + actor.profile_path} alt={actor.name}/>

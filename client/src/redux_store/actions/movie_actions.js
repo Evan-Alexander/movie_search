@@ -47,7 +47,7 @@ export function getMovieById(id) {
 export function clearMovie() {
   return {
     type: CLEAR_MOVIE,
-    payload: {}
+    payload: ""
   }
 }
 
