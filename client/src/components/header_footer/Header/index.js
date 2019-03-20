@@ -1,5 +1,4 @@
 import React, { Component } from 'react'
-import { connect } from 'react-redux';
 
 class Header extends Component {
 
@@ -16,11 +15,5 @@ class Header extends Component {
     )
   }
 }
-// const mapStateToProps = state => {
-//   return {
-//     movies: this.state
-//   }
-// }
-// export default connect(mapStateToProps)(Header)
 
 export default Header

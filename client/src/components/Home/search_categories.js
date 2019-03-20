@@ -1,16 +1,48 @@
-import React from 'react'
-import { movieOptions } from '../../utils.js/misc';
 
-const SearchCategories = ({changeSearch, searches}) => {
-  
-  return (
-    <div>
-      <h4 className="search-option-header">Search By: </h4>
-      {searches.map((search, i) => {
-          return <span className="search-options" key={i} onClick={()=> changeSearch(search)}>{movieOptions(search)}</span>;
-        })}
-    </div>
-  )
+import React, { Component } from 'react'
+import { handleMovieOptions } from '../../utils/misc';
+import { connect } from 'react-redux';
+
+class SearchCategories extends Component {
+
+  state = {
+    currentSearch: ''
+  }
+
+
+  handleToggle = (value) => {
+      this.setState({
+        currentSearch: value.name
+      }, () => {
+        this.props.handleFilters(value)
+      })
+  }
+
+  renderOtptions = () => (
+    this.props.searches.map((search, i) => (
+          <span 
+            className="search-options" 
+            key={i} 
+            onClick={()=> this.handleToggle(search)}
+          >
+            {handleMovieOptions(search.name)}
+          </span>
+        )
+  ))
+
+  render() {
+    return (
+      <div>
+        <h4 className="search-option-header">Search By: </h4>
+        {this.renderOtptions()}
+      </div>
+    )
+  }
+}
+const mapStateToProps = state => {
+  return {
+    movies: state.movieData
+  }
 }
 
-export default SearchCategories
+export default connect(mapStateToProps)(SearchCategories)

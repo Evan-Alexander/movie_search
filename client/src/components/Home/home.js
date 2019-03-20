@@ -1,124 +1,129 @@
 import React, { Component } from 'react'
-import SearchCategories from './search_categories';
 import LeftRightSearch from './left_right_search';
 import SearchBox from './searchbox';
-
+import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
-import { getMoviesByOption, getMoviesBySearchTerm } from '../../redux_store/actions/movie_actions';
+import { getMoviesByOption, getMoviesBySearchTerm, getNextPage } from '../../redux_store/actions/movie_actions';
+import { searchOptions } from '../../utils/fixed_categories';
+import SearchCategories from './search_categories';
 
-class Home extends Component {
-  state = {
-    movies: [],
-    page: 1,
-    totalPages: null,
-    searches: ["popular", "top_rated", "upcoming"],
-    searchType: ''
+class Home2 extends Component {
+  constructor(props) {
+    super(props)
+    this.state = {
+      currentSearch: '',
+      currentPage: 0,
+      movies: []
+    }
   }
-
-  loadMovies = () => {
-    const { page, searchType } = this.state;
-    this.props.dispatch(getMoviesByOption(searchType, page))
-    .then(() => {
-      console.log(this.props.movies.movies)
-      let newMovies = [];
-      this.props.movies.movies.results.map(item => {
-        newMovies.push(item)
-        return newMovies
-      })
-      this.setState({
-        movies: newMovies,
-        page
-      })
-    })
-    .catch(err => console.log(err))
-  }
-
+  
   componentDidMount() {
-    if(this.state.searchType === '') {
+    if(this.state.currentSearch === "" && this.state.currentPage === 0) {
       this.setState({
-        searchType: 'popular'
+        currentSearch: 'popular',
+        currentPage: 1
       }, () => {
-        this.loadMovies()
+        this.loadMovies(this.state.currentSearch, this.state.currentPage)
       })
     }
   }
 
-  showMore = (e) => {
-    this.setState(prevState => ({
-      page: prevState.page + 1
-    }), () => this.loadMovies())
-  }
-
-  goBack = (e) => {
-    this.setState(prevState => ({
-      page: prevState.page - 1
-    }), () => this.loadMovies())
-  }
-
-  changeSearch = (searchType) => {
-    this.setState({
-      page: 1,
-      searchType
-    }, () => {
-      if (searchType === this.state.searchType) {
-        this.loadMovies();
+  loadMovies(currentSearch, currentPage) {
+    sessionStorage.setItem('currentSearch', currentSearch);
+    this.props.dispatch(getMoviesByOption(currentSearch, currentPage))
+    .then((response) => {
+      if(response.payload) {
+        this.setState({
+          currentSearch,
+          currentPage,
+          movies: response.payload.results
+        })
       }
-    });
+    })
+    .catch(err => console.log(err))
   }
+
+  handleFilters = (value) => {
+    let newSearchPage = 1;
+    this.loadMovies(value.name, newSearchPage)
+  } 
+
+  renderMovies = () => (
+    this.state.movies ? 
+    this.state.movies.map((movie, i) => (
+
+      movie.id && movie.poster_path ? 
+        <div className="col-md-3 col-sm-6 movie-posters" key={i} currentsearch={this.state.currentSearch}>
+          <Link to={`/movie/${movie.id}`}>
+            <img src={'https://image.tmdb.org/t/p/w300' + movie.poster_path} alt="thing"/>
+          </Link>
+        </div>
+      :null
+
+    ))
+  :null
+  )
 
   onSearchChange = e => {
     let searchWord = e.target.value;
     this.props.dispatch(getMoviesBySearchTerm(searchWord))
-      .then(() => {
-        let newMovies = [];
-        if(this.props.movies.movies.results.length > 0) {
-          this.props.movies.movies.results.map(item => {
-            newMovies.push(item)
-            return newMovies
-          })
+      .then((response) => {
+        if(response.payload) {
           this.setState({
-            movies: newMovies
+            movies: response.payload.results,
+            currentPage: 1
           })
         }
       })
   }
 
-  render() {
-    const posterPath = 'https://image.tmdb.org/t/p/w300';
-    return (
-      <div className="container">
-        <div className="row">
-        <div className="col-md-9 d-flex justify-content-right align-items-center"><h1>Movie Database </h1> </div>
-        <div className="col-md-3 d-flex justify-content-center align-items-center">
-            <SearchBox searchChange={this.onSearchChange} />
-            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="mx-3"><circle cx="10.5" cy="10.5" r="7.5"></circle><line x1="21" y1="21" x2="15.8" y2="15.8"></line></svg>     
-          </div>
-        <SearchCategories changeSearch={this.changeSearch} searches={this.state.searches}/> 
-        </div>
+  showMore = (e) => {
+    let nextPage = this.state.currentPage + 1;
+    this.setState({
+      currentPage: nextPage
+    }, () => {
+      this.loadMovies(this.state.currentSearch, this.state.currentPage)
+    })
+  }
 
+  goBack = (e) => {
+    if(this.state.currentPage <= 1) {
+      return null;
+    }
+    let nextPage = this.state.currentPage - 1;
+    this.setState({
+      currentPage: nextPage
+    }, () => {
+      this.loadMovies(this.state.currentSearch, this.state.currentPage)
+    })
+  }
+
+  render() {
+    return (
+      <div>
         <div className="row">
-        {this.state.movies ? 
-            this.state.movies.map((movie, i) => (
-              <div className="col-md-3 col-sm-6" key={i}>
-              {
-                movie.poster_path ? 
-                  <img src={posterPath + movie.poster_path} alt="thing"/>
-                :null
-              } 
-              </div>
-            ))
-          :null}
+          <div className="col-md-9 d-flex justify-content-right align-items-center"><h1>Movie Database </h1> </div>
+          <SearchBox searchChange={this.onSearchChange} />
         </div>
-        <LeftRightSearch goBack={this.goBack} showMore={this.showMore}/>
-      </div>
-    );
+        <div className="row">
+          <SearchCategories 
+            searches={searchOptions}
+            handleFilters={(filters) => this.handleFilters(filters)}
+          />
+        </div>
+        <div className="row">
+          {this.renderMovies()}
+        </div>
+          <LeftRightSearch goBack={this.goBack} showMore={this.showMore}/>
+        </div>
+    )
   }
 }
 
 const mapStateToProps = state => {
   return {
-    movies: state.movies
+    movies: state.movieData
   }
 }
 
-export default connect(mapStateToProps)(Home)
+export default connect(mapStateToProps)(Home2)
