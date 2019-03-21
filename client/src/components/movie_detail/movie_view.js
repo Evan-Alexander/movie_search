@@ -5,7 +5,6 @@ import RatingParent from './rating_parent';
 
 const MovieView = (props) => {
   const { movie } = props;
-  console.log(movie.revenue)
   const posterBase = 'https://image.tmdb.org/t/p/w300';
 
     let cast = [];

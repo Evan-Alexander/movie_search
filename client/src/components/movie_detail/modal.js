@@ -31,10 +31,8 @@ class Modal extends Component {
           let trailerType = video.type.indexOf("Trailer");
           if (official !== -1 || trailer !== -1) {
             videoKeys.push(video.key)
-            console.log(videoKeys)
           } else if (official === -1 || trailer === -1 && trailerType !== -1) {
             videoKeys.push(video.key)
-            console.log('did we get it?', videoKeys)
           }
         } 
         return videoKeys;
