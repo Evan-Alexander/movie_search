@@ -3,7 +3,7 @@ import LeftRightSearch from './left_right_search';
 import SearchBox from './searchbox';
 import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
-import { getMoviesByOption, getMoviesBySearchTerm, clearMovie } from '../../redux_store/actions/movie_actions';
+import { getMoviesByOption, getMoviesBySearchTerm } from '../../redux_store/actions/movie_actions';
 import { searchOptions } from '../../utils/fixed_categories';
 import SearchCategories from './search_categories';
 
@@ -98,7 +98,7 @@ class Home extends Component {
   }
 
   render() {
-    console.log("rendered state", this.state)
+    // console.log("rendered state", this.state)
 
     return (
       <div>
@@ -106,12 +106,10 @@ class Home extends Component {
           <div className="col-md-9 d-flex justify-content-right align-items-center"><h1>Movie Database </h1> </div>
           <SearchBox searchChange={this.onSearchChange} />
         </div>
-        <div className="row">
-          <SearchCategories 
-            searches={searchOptions}
-            handleFilters={(filters) => this.handleFilters(filters)}
-          />
-        </div>
+        <SearchCategories 
+          searches={searchOptions}
+          handleFilters={(filters) => this.handleFilters(filters)}
+        />
         <div className="row">
           {this.renderMovies()}
         </div>

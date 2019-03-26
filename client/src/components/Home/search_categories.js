@@ -32,7 +32,7 @@ class SearchCategories extends Component {
 
   render() {
     return (
-      <div>
+      <div className="row align-items-center">
         <h4 className="search-option-header">Search By: </h4>
         {this.renderOtptions()}
       </div>

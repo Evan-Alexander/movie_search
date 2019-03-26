@@ -24,7 +24,7 @@ class MovieDetail extends Component {
 
   render() {
     return (
-      <div>
+      <>
         <button className="go-back" onClick={this.handleHistory} title="Back"><i className="fas fa-arrow-left"></i></button>
         {
           this.props.movie ? 
@@ -32,7 +32,7 @@ class MovieDetail extends Component {
           :null
         }
 
-      </div>
+      </>
     )
   }
 }
