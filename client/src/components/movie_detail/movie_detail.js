@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import { getMovieById, clearMovie } from '../../redux_store/actions/movie_actions';
+import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 import MovieView from './movie_view';
 
@@ -13,10 +14,6 @@ class MovieDetail extends Component {
       }
     })
   }
-  
-  handleHistory = (e) => {
-    this.props.history.goBack()
-  } 
 
   componentWillUnmount() {
     this.props.dispatch(clearMovie())
@@ -25,10 +22,10 @@ class MovieDetail extends Component {
   render() {
     return (
       <>
-        <button className="go-back" onClick={this.handleHistory} title="Back"><i className="fas fa-arrow-left"></i></button>
+      <Link to={`/`} className="go-back"><i className="fas fa-arrow-left"></i></Link>
         {
           this.props.movie ? 
-            <MovieView movie={{...this.props.movie}}/>
+            <MovieView movie={{...this.props.movie}} />
           :null
         }
 

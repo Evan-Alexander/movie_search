@@ -243,7 +243,7 @@ body {
   color: white;
 }
 
-button.go-back {
+a.go-back {
   color: white;
   cursor: pointer;
   transition: all .3s;
@@ -252,12 +252,12 @@ button.go-back {
   left: 30px;
 }
 
-button.go-back:hover {
+a.go-back:hover {
   color: teal;
 }
 
 .play-trailer-btn:focus,
-button.go-back:focus,
+a.go-back:focus,
 .modal-video-close-btn:focus {
   outline: none;
 }
@@ -376,7 +376,7 @@ circle {
 
 
  @media (max-width: 1199.98px) {
-  button.go-back {
+  a.go-back {
     top: 10px;
     left: 15px;
   }

@@ -2,7 +2,7 @@ import React from 'react'
 import { Link } from 'react-router-dom';
 
 const LoadMovies = (props) => {
-  console.log("loadmovies props", props)
+  ("loadmovies props", props)
   const movies  = props.movies.results;
   const posterPath = 'https://image.tmdb.org/t/p/w300';
   return (

@@ -25,8 +25,9 @@ class Home extends Component {
       }, () => {
         this.loadMovies(this.state.currentSearch, this.state.currentPage)
       })
-    }
+    }  
   }
+
 
   loadMovies(currentSearch, currentPage) {
     this.props.dispatch(getMoviesByOption(currentSearch, currentPage))
@@ -98,8 +99,6 @@ class Home extends Component {
   }
 
   render() {
-    // console.log("rendered state", this.state)
-
     return (
       <div>
         <div className="row">
