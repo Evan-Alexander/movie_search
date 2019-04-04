@@ -31,9 +31,20 @@ body {
   border: none;
   border-radius: 12px;
   padding-left: 8px;
+  padding-right: 8px;
+  height: 30px;
   background: black;
   text-align: right;
+  box-shadow: inset 0 1px 2px rgba(0,0,0,.39), 0 -1px 1px #a7a7a7, 0 1px 0 #a7a7a7;
 }
+
+.fa-search {
+  color: white;
+  font-size: 22px;
+  margin-left: 12px;
+}
+
+
 
 .search-option-header {
   display: inline-block;
@@ -335,10 +346,14 @@ circle {
 }
 
 @media (max-width: 575.98px) {
+  .search-options-container {
+    margin: 15px;
+  }
   .search-options {
     font-size: 0.8em;
   }
   .search-option-header {
+    width: 100%;
     font-size: 1.2em;
   }
   .movie-detail-poster {
@@ -367,9 +382,23 @@ circle {
     min-height: 140px;
   }
 
-
   .crew-label {
     font-size: 0.8em;
+  }
+
+  .load-more-btn.left {
+    left: 6%
+  }
+  .load-more-btn.right {
+    right: 7%
+  }
+
+  .play-trailer {
+    margin-bottom: 20px;
+  }
+
+  .crew-container {
+    margin-bottom: 10px;
   }
  }
 

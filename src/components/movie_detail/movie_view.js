@@ -119,8 +119,8 @@ const MovieView = (props) => {
             <TrailerModal />
      
           </div>
-          <div className="container">
-            <h5>Crew</h5>
+          <div className="container crew-container">
+            <h5 className="text-left">Crew</h5>
             <div className="row align-items-center padding-b">
             {renderDirectors}
             {renderEveryoneElse}
@@ -128,7 +128,7 @@ const MovieView = (props) => {
           </div>
 
           <div className="container">
-            <h5>Starring</h5>
+            <h5 className="text-left">Starring</h5>
             <div className="row align-items-center">
               {getCast ? 
                 getCast.map((actor, i) => (      
